@@ -38,8 +38,10 @@
     "webpack-merge": "^4.1.0"
   },
   "dependencies": {
+    "classnames": "^2.2.5",
     "react": "^16.0.0",
-    "react-dom": "^16.0.0"
+    "react-dom": "^16.0.0",
+    "recompose": "^0.26.0"
   },
   "repository": {
     "type": "git",
