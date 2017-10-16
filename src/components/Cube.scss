@@ -9,15 +9,19 @@
 
 .side {
   position: absolute;
-  border: 1px solid black;
+  border: 1px solid #303030;
   width: 100%;
   height: 100%;
   border-radius: 3px;
-  opacity: .8;
+  opacity: .5;
   background: #ffaf4b;
   background: -moz-linear-gradient(left, hsla(33,100%,65%,1) 0%, hsla(33,100%,52%,1) 100%);
   background: -webkit-linear-gradient(left, hsla(33,100%,65%,1) 0%,hsla(33,100%,52%,1) 100%);
   background: linear-gradient(to right, hsla(33,100%,65%,1) 0%,hsla(33,100%,52%,1) 100%);
+
+  &.back {
+    border: 1px dotted #303030;
+  }
 }
 
 @keyframes rotate {

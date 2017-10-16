@@ -7,10 +7,6 @@ import withProps from 'recompose/withProps';
 import cn from 'classnames';
 import './Cube.scss';
 
-function getSideStyle(XYZ, _XYZ) {
-
-}
-
 const Cube = ({
   size,
   cubeStyle,
@@ -18,23 +14,24 @@ const Cube = ({
   posX,
   posY,
   posZ,
+  getSideStyle,
 }) => (
   <div
     className={cn('cube-container', { animate })}
     style={cubeStyle}
   >
     <div className="back side"
-      style={{ transform: `translateZ(${-size/2}em)`}} />
+      style={{ transform: getSideStyle(0, 0, -1)}} />
     <div className="left side"
-      style={{ transform: `translateX(${-size/2}em) rotateY(90deg)`}} />
+      style={{ transform: getSideStyle(-1, 0, 0) + ' rotateY(90deg)'}} />
     <div className="right side"
-      style={{ transform: `translateX(${size/2}em) rotateY(90deg)`}} />
+      style={{ transform: getSideStyle(1, 0, 0)  + ' rotateY(90deg)'}} />
     <div className="top side"
-      style={{ transform: `translateY(${-size/2}em) rotateX(90deg)`}} />
+      style={{ transform: getSideStyle(0, -1, 0) + ' rotateX(90deg)'}} />
     <div className="bottom side"
-      style={{ transform: `translateY(${size/2}em) rotateX(90deg)`}} />
+      style={{ transform: getSideStyle(0, 1, 0) + ' rotateX(90deg)'}} />
     <div className="front side"
-      style={{ transform: `translateZ(${size/2}em)`}} />
+      style={{ transform: getSideStyle(0, 0, 1)}} />
   </div>
 );
 
@@ -47,22 +44,22 @@ export default compose(
     posY: 0,
     posZ: 0,
   }),
-  withProps(({ viewAngle, size, posX, posY, posZ }) => {
-    const cubeTransforms = [
-      // `translateX(${posX*size}em)`,
-      // `translateY(${posY*size}em)`,
-      // `translateZ(${posZ*size}em)`,
-      `rotateX(0)`,
-      `rotateY(${viewAngle}deg)`,
-      `rotateZ(0)`,
-    ];
+  withProps(({ viewAngle, size, posX, posY, posZ, zIndex }) => {
     return {
       cubeStyle: {
-        transform: cubeTransforms.join(' '),
-        border: '1px dashed red',
+        transform: `rotateX(0) rotateY(${viewAngle}deg) rotateZ(0)`,
         width: `${size}em`,
         height: `${size}em`,
+        zIndex: zIndex,
       },
+      getSideStyle: (modX, modY, modZ) => {
+        const positions = [
+          `translateX(${size*posX + modX*size/2}em)`,
+          `translateY(${size*posY + modY*size/2}em)`,
+          `translateZ(${size*posZ + modZ*size/2}em)`,
+        ];
+        return positions.join(' ');
+      }
     }
   }),
 )(Cube);
