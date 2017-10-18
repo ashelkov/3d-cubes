@@ -10,6 +10,10 @@ body {
   align-items: center;
   perspective: 1000px;
   perspective-origin: center -5em;
+  background:
+  	linear-gradient(#ccc, transparent),
+  	linear-gradient(180deg, #dedede, transparent);
+  background-blend-mode: screen;
 }
 
 #root {
