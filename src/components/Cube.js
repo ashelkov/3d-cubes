@@ -15,9 +15,11 @@ const Cube = ({
   posY,
   posZ,
   getSideStyle,
+  rotationMode,
+  rotation,
 }) => (
   <div
-    className={cn('cube-container', { animate })}
+    className={cn('cube-container', { animate, rotationMode })}
     style={cubeStyle}
   >
     <div className="back side"
@@ -38,16 +40,15 @@ const Cube = ({
 export default compose(
   defaultProps({
     size: 5,
-    viewAngle: 55,
     animate: false,
     posX: 0,
     posY: 0,
     posZ: 0,
   }),
-  withProps(({ viewAngle, size, posX, posY, posZ, zIndex }) => {
+  withProps(({ size, posX, posY, posZ, zIndex, rotation }) => {
     return {
       cubeStyle: {
-        transform: `rotateX(0) rotateY(${viewAngle}deg) rotateZ(0)`,
+        transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) rotateZ(${rotation.z}deg)`,
         width: `${size}em`,
         height: `${size}em`,
         zIndex: zIndex,
