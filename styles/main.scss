@@ -8,8 +8,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  perspective: 1000px;
-  perspective-origin: center -5em;
+  perspective: 60rem;
+  perspective-origin: center -5rem;
   background:
   	linear-gradient(#ccc, transparent),
   	linear-gradient(180deg, #dedede, transparent);

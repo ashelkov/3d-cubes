@@ -14,13 +14,16 @@ const Cube = ({
   posX,
   posY,
   posZ,
+  zIndex,
   getSideStyle,
   rotationMode,
   rotation,
+  onClick,
 }) => (
   <div
     className={cn('cube-container', { animate, rotationMode })}
     style={cubeStyle}
+    onClick={onClick}
   >
     <div className="back side"
       style={{ transform: getSideStyle(0, 0, -1)}} />
