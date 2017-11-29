@@ -1,6 +1,6 @@
 // returns letter code of current rotation angles
 export function getRotationCode({ x, y, z }) {
-  const X_PERSPECTIVE = 28;
+  const X_PERSPECTIVE = 25;
   let code = '';
   [x - X_PERSPECTIVE, y, z].forEach((angle) => {
     const a = angle < 0
@@ -18,24 +18,24 @@ export function getRotationCode({ x, y, z }) {
 export function getSortingPattern(code) {
   switch (code) {
     case 'AAA': return '+Y/-X/+Z';
-    case 'ABA': return '';
-    case 'ACA': return '';
-    case 'ADA': return '';
+    case 'ABA': return '+Y/-Z/-X';
+    case 'ACA': return '+Y/+X/-Z';
+    case 'ADA': return '+Y/+Z/+X';
 
-    case 'BAA': return '';
-    case 'BBA': return '';
-    case 'BCA': return '';
-    case 'BDA': return '';
+    case 'BAA': return '+Y/+X/-Z';
+    case 'BBA': return '+Y/+Z/+X';
+    case 'BCA': return '+Y/-X/+Z';
+    case 'BDA': return '+Y/-Z/-X';
 
-    case 'CAA': return '';
-    case 'CBA': return '';
-    case 'CCA': return '';
-    case 'CDA': return '';
+    case 'CAA': return '-Y/+X/-Z';
+    case 'CBA': return '-Y/+Z/+X';
+    case 'CCA': return '-Y/-X/+Z';
+    case 'CDA': return '-Y/-Z/-X';
 
     case 'DAA': return '-Y/-X/+Z';
-    case 'DBA': return '';
-    case 'DCA': return '';
-    case 'DDA': return '';
+    case 'DBA': return '-Y/-Z/-X';
+    case 'DCA': return '-Y/+X/-Z';
+    case 'DDA': return '-Y/+Z/+X';
   }
 }
 
@@ -63,7 +63,7 @@ export function getMatrixIndexes(matrix, code) {
   if (pattern) {
     const sorter = pattern.toLowerCase().split('/');
     cubeMatrix.sort(function(a, b) {
-      for (var i = 0; i < sorter.length; i++) {
+      for (let i = 0; i < sorter.length; i++) {
         const prop = sorter[i][1];
         const inverter = sorter[i][0] === '-' ? -1 : 1;
         if (a[prop] === b[prop]) continue;
@@ -74,7 +74,7 @@ export function getMatrixIndexes(matrix, code) {
       indexes[`${x}${y}${z}`] = index;
     });
   } else {
-    console.warn('No pattern matchied for:', code);
+    console.warn('No pattern matched for:', code);
   }
 
   return indexes;

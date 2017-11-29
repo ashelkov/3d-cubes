@@ -5,12 +5,10 @@ import Cube from './Cube';
 import throttle from 'lodash/throttle';
 import {
   getRotationCode,
-  getSortingFormula,
   createCubeMatrix,
   getMatrixIndexes,
 } from './utils';
 // styles
-import cn from 'classnames';
 import './HyperCube.scss';
 
 class HyperCube extends Component {
@@ -84,7 +82,7 @@ class HyperCube extends Component {
 
   handleCubeClick = (x, y, z) => (e) => {
     console.log('x, y, z', {x, y, z});
-  }
+  };
 
   render() {
     const { depth, width, height, size, margin, rotationMode } = this.props;

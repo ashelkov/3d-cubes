@@ -1,7 +1,7 @@
 .cube-container {
   transform-style: preserve-3d;
   position: absolute;
-  transition: transform .35s linear;
+  transition: transform .1s linear;
 
   &.rotationMode {
     .side {

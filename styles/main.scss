@@ -9,11 +9,12 @@ body {
   justify-content: center;
   align-items: center;
   perspective: 60rem;
-  perspective-origin: center -5rem;
+  perspective-origin: center -25%;
   background:
-  	linear-gradient(#ccc, transparent),
+  	linear-gradient(#cacaca, transparent),
   	linear-gradient(180deg, #dedede, transparent);
   background-blend-mode: screen;
+  overflow: hidden;
 }
 
 #root {
