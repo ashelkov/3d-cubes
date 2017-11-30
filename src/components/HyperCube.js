@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 // components
 import Cube from './Cube';
 // utils
-import throttle from 'lodash/throttle';
+import throttle from 'lodash.throttle';
+import memoize from 'lodash.memoize';
 import {
   getRotationCode,
   createCubeMatrix,
@@ -24,6 +25,7 @@ class HyperCube extends Component {
       cubeMatrixIndexes: getMatrixIndexes(matrix, 'DAA'),
     };
     this.onMouseMoveThrottled = throttle(this.handleMouseMove, 100);
+    this.reindexMatrix = memoize(getMatrixIndexes, (m, c, w, h, d) => `${c}-${w}-${h}-${d}`);
   }
 
   componentDidMount() {
@@ -64,10 +66,10 @@ class HyperCube extends Component {
       };
       const nextCode = getRotationCode(nextRotation);
 
-      this.setState((prevState, props) => {
+      this.setState((prevState, { width, height, depth }) => {
         const isReindexReqired = prevState.rotationCode !== nextCode;
         const extra = isReindexReqired ? {
-          cubeMatrixIndexes: getMatrixIndexes(cubeMatrix, nextCode)
+          cubeMatrixIndexes: this.reindexMatrix(cubeMatrix, nextCode, width, height, depth)
         } : {};
 
         return {
@@ -116,7 +118,7 @@ HyperCube.defaultProps = {
   depth: 3,
   width: 3,
   height: 3,
-  size: 4,
+  size: 3,
   margin: 0.25,
 };
 

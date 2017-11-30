@@ -1,0 +1,14 @@
+.app-scene {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 60rem;
+  perspective-origin: center -25%;
+  background:
+          linear-gradient(#cacaca, transparent),
+          linear-gradient(180deg, #dedede, transparent);
+  background-blend-mode: screen;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}

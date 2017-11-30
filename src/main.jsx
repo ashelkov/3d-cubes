@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import HyperCube from './components/HyperCube';
+import App from './App';
 import '../styles/index.scss';
 
 ReactDOM.render(
-    <HyperCube />,
+    <App />,
     document.getElementById('root')
 );
