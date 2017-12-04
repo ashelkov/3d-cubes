@@ -9,7 +9,7 @@ export function getRotationCode({ x, y, z }) {
     if (a < 90)  return code += 'A';
     if (a < 180) return code += 'B';
     if (a < 270) return code += 'C';
-    if (a < 360) return code += 'D';
+    return code += 'D';
   });
   return code;
 }

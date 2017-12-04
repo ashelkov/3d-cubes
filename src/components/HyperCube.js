@@ -86,8 +86,14 @@ class HyperCube extends Component {
     console.log('x, y, z', {x, y, z});
   };
 
+  getCubePosition = (index, length) => {
+    const { margin } = this.props;
+    // return index - length/2*(1 + margin) + margin*(index + 1);
+    return (index - length/2 + 0.5)*(1+margin);
+  };
+
   render() {
-    const { depth, width, height, size, margin, rotationMode } = this.props;
+    const { depth, width, height, size, rotationMode } = this.props;
     const { cubeMatrix, cubeMatrixIndexes, rotation, rotationCode } = this.state;
 
     return (
@@ -95,9 +101,9 @@ class HyperCube extends Component {
         {cubeMatrix.map(({ x, y, z }, index) => (
           <Cube
             key={`${x}-${y}-${z}`}
-            posX={x-depth*(1+margin)/2 + margin*(x+1)}
-            posY={y-height*(1+margin)/2 + margin*(y+1)}
-            posZ={z-width*(1+margin)/2 + margin*(z+1)}
+            posX={this.getCubePosition(x, depth)}
+            posY={this.getCubePosition(y, height)}
+            posZ={this.getCubePosition(z, width)}
             size={size}
             zIndex={cubeMatrixIndexes[`${x}${y}${z}`]}
             rotationMode={rotationMode}

@@ -2,6 +2,7 @@
   transform-style: preserve-3d;
   position: absolute;
   transition: transform .1s linear;
+  will-change: transform;
 
   &.rotationMode {
     .side {
@@ -19,7 +20,6 @@
   opacity: .8;
   background: #999;
   user-select: none;
-  user-drag: none;
 
   &:hover {
     background-color: orange;
