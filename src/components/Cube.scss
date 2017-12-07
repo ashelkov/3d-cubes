@@ -20,6 +20,8 @@
   opacity: .8;
   background: #999;
   user-select: none;
+  //transition: transform .3s ease;
+  //will-change: transform;
 
   &:hover {
     background-color: orange;
