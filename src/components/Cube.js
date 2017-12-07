@@ -25,17 +25,17 @@ const Cube = ({
     style={cubeStyle}
     onClick={onClick}
   >
-    <div className="back side"
+    <div className="back side" title="back"
       style={{ transform: getSideStyle(0, 0, -1)}} />
-    <div className="left side"
+    <div className="left side" title="left"
       style={{ transform: getSideStyle(-1, 0, 0) + ' rotateY(90deg)'}} />
-    <div className="right side"
+    <div className="right side" title="right"
       style={{ transform: getSideStyle(1, 0, 0)  + ' rotateY(90deg)'}} />
-    <div className="top side"
+    <div className="top side" title="top"
       style={{ transform: getSideStyle(0, -1, 0) + ' rotateX(90deg)'}} />
-    <div className="bottom side"
+    <div className="bottom side" title="bottom"
       style={{ transform: getSideStyle(0, 1, 0) + ' rotateX(90deg)'}} />
-    <div className="front side"
+    <div className="front side" title="front"
       style={{ transform: getSideStyle(0, 0, 1)}} />
   </div>
 );
