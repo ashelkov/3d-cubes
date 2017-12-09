@@ -1,4 +1,4 @@
-.app-scene {
+.app-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,14 +12,10 @@
   height: 100%;
   overflow: hidden;
   user-select: none;
-}
 
-.dev-buttons {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-
-  button {
-    margin: 5px;
+  .control-buttons {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
   }
 }

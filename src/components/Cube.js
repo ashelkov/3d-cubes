@@ -1,7 +1,6 @@
 import React from 'react';
 // recompose
 import compose from 'recompose/compose';
-import defaultProps from 'recompose/defaultProps';
 import withProps from 'recompose/withProps';
 // styles
 import cn from 'classnames';
@@ -10,7 +9,6 @@ import './Cube.scss';
 const Cube = ({
   size,
   cubeStyle,
-  animate,
   posX,
   posY,
   posZ,
@@ -21,7 +19,7 @@ const Cube = ({
   onClick,
 }) => (
   <div
-    className={cn('cube-container', { animate, rotationMode })}
+    className={cn('cube-container', { rotationMode })}
     style={cubeStyle}
     onClick={onClick}
   >
@@ -41,13 +39,6 @@ const Cube = ({
 );
 
 export default compose(
-  defaultProps({
-    size: 5,
-    animate: false,
-    posX: 0,
-    posY: 0,
-    posZ: 0,
-  }),
   withProps(({ size, posX, posY, posZ, zIndex, rotation }) => {
     return {
       cubeStyle: {
