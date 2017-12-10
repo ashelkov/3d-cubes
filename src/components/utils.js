@@ -41,7 +41,7 @@ export function getSortingPattern(code) {
 
 // cube matrix creation based on dimensions
 export function createCubeMatrix({ W, H, D }) {
-  console.log('createCubeMatrix()', { W, H, D });
+  // console.log('createCubeMatrix()', { W, H, D });
 
   const matrix = [];
   for (let y = H[0]; y <= H[1]; y++) {
@@ -56,7 +56,7 @@ export function createCubeMatrix({ W, H, D }) {
 
 // sort cube matrix by rotationCode
 export function getMatrixIndexes(matrix, code) {
-  console.log('getMatrixIndexes()', code);
+  // console.log('getMatrixIndexes()', code);
 
   const pattern = getSortingPattern(code);
   const cubeMatrix = [...matrix];

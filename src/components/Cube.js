@@ -1,6 +1,7 @@
 import React from 'react';
 // recompose
 import compose from 'recompose/compose';
+import pure from 'recompose/pure';
 import withProps from 'recompose/withProps';
 // styles
 import cn from 'classnames';
@@ -17,23 +18,24 @@ const Cube = ({
   rotationMode,
   rotation,
   onClick,
+  withMotion,
 }) => (
   <div
-    className={cn('cube-container', { rotationMode })}
+    className={cn('cube-container', { rotationMode, 'no-transition': withMotion })}
     style={cubeStyle}
     onClick={onClick}
   >
-    <div className="back side" title="back"
+    <div className="back side" data-side="back"
       style={{ transform: getSideStyle(0, 0, -1)}} />
-    <div className="left side" title="left"
+    <div className="left side" data-side="left"
       style={{ transform: getSideStyle(-1, 0, 0) + ' rotateY(90deg)'}} />
-    <div className="right side" title="right"
+    <div className="right side" data-side="right"
       style={{ transform: getSideStyle(1, 0, 0)  + ' rotateY(90deg)'}} />
-    <div className="top side" title="top"
+    <div className="top side" data-side="top"
       style={{ transform: getSideStyle(0, -1, 0) + ' rotateX(90deg)'}} />
-    <div className="bottom side" title="bottom"
+    <div className="bottom side" data-side="bottom"
       style={{ transform: getSideStyle(0, 1, 0) + ' rotateX(90deg)'}} />
-    <div className="front side" title="front"
+    <div className="front side" data-side="front"
       style={{ transform: getSideStyle(0, 0, 1)}} />
   </div>
 );
@@ -43,18 +45,19 @@ export default compose(
     return {
       cubeStyle: {
         transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) rotateZ(${rotation.z}deg)`,
-        width: `${size}em`,
-        height: `${size}em`,
+        width: `${size}px`,
+        height: `${size}px`,
         zIndex: zIndex,
       },
       getSideStyle: (modX, modY, modZ) => {
         const positions = [
-          `translateX(${size*posX + modX*size/2}em)`,
-          `translateY(${size*posY + modY*size/2}em)`,
-          `translateZ(${size*posZ + modZ*size/2}em)`,
+          `translateX(${size*posX + modX*size/2}px)`,
+          `translateY(${size*posY + modY*size/2}px)`,
+          `translateZ(${size*posZ + modZ*size/2}px)`,
         ];
         return positions.join(' ');
       }
     }
   }),
+  pure,
 )(Cube);
