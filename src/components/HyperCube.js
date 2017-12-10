@@ -19,7 +19,7 @@ class HyperCube extends Component {
     super();
     this.state = this.getInitialState();
     this.onMouseMoveThrottled = throttle(this.handleMouseMove, 100);
-    this.reindexMatrix = memoize(getMatrixIndexes, (m, c, w, h, d) => `${c}-${w}-${h}-${d}`);
+    this.reindexMatrix = memoize(getMatrixIndexes, (m, c, x, y, z) => `${c}-${x}-${y}-${z}`);
     this.newLayer = {};
   }
 
@@ -37,9 +37,9 @@ class HyperCube extends Component {
 
   getInitialState = () => {
     const initialMeasures = {
-      W: [-1, 0],
-      H: [-1, 0],
-      D: [-1, 0],
+      Z: [-1, 0],
+      Y: [-1, 0],
+      X: [-1, 0],
       size: 45,
       margin: 0.25,
     };
@@ -88,11 +88,11 @@ class HyperCube extends Component {
       };
       const nextCode = getRotationCode(nextRotation);
 
-      this.setState(({ rotationCode, W, H, D }) => {
+      this.setState(({ rotationCode, Z, Y, X }) => {
         const extra = {};
         if (nextCode !== rotationCode) {
           Object.assign(extra, {
-            cubeMatrixIndexes: this.reindexMatrix(cubeMatrix, nextCode, W, H, D)
+            cubeMatrixIndexes: this.reindexMatrix(cubeMatrix, nextCode, X, Y, Z)
           });
         }
 
@@ -108,17 +108,17 @@ class HyperCube extends Component {
 
   // SIDE CLICK
   handleCubeClick = (x, y, z) => ({ target }) => {
-    const { W, H, D, rotationCode } = this.state;
+    const { Z, Y, X, rotationCode } = this.state;
     const side = target.getAttribute('data-side');
     const override = {
-      top:    { H: [H[0] - 1, H[1]] },
-      bottom: { H: [H[0], H[1] + 1] },
-      right:  { D: [D[0], D[1] + 1] },
-      left:   { D: [D[0] - 1, D[1]] },
-      front:  { W: [W[0], W[1] + 1] },
-      back:   { W: [W[0] - 1, W[1]] },
+      top:    { Y: [Y[0] - 1, Y[1]] },
+      bottom: { Y: [Y[0], Y[1] + 1] },
+      right:  { X: [X[0], X[1] + 1] },
+      left:   { X: [X[0] - 1, X[1]] },
+      front:  { Z: [Z[0], Z[1] + 1] },
+      back:   { Z: [Z[0] - 1, Z[1]] },
     }[side];
-    const matrix = createCubeMatrix({ W, H, D, ...override });
+    const matrix = createCubeMatrix({ Z, Y, X, ...override });
     this.setState({
       cubeMatrix: matrix,
       cubeMatrixIndexes: getMatrixIndexes(matrix, rotationCode),
@@ -144,7 +144,7 @@ class HyperCube extends Component {
   };
 
   getMotionDefaultStyle = ({ x, y, z }) => {
-    const SHIFT_SIZE = 5;
+    const SHIFT_SIZE = 3;
     const override = {
       top:    { y: y - SHIFT_SIZE },
       bottom: { y: y + SHIFT_SIZE },
@@ -163,7 +163,7 @@ class HyperCube extends Component {
   };
 
   render() {
-    const { cubeMatrix, cubeMatrixIndexes, rotation, rotationCode, size, isRotating, W, H, D } = this.state;
+    const { cubeMatrix, cubeMatrixIndexes, rotation, rotationCode, size, isRotating, Z, Y, X } = this.state;
     const springPreset = { stiffness: 100, damping: 12 };
 
     return (
@@ -180,9 +180,9 @@ class HyperCube extends Component {
           >
             {(motion) => (
               <Cube
-                posX={this.getCubePosition(motion.x, D)}
-                posY={this.getCubePosition(motion.y, H)}
-                posZ={this.getCubePosition(motion.z, W)}
+                posX={this.getCubePosition(motion.x, X)}
+                posY={this.getCubePosition(motion.y, Y)}
+                posZ={this.getCubePosition(motion.z, Z)}
                 size={size}
                 zIndex={cubeMatrixIndexes[`${x}${y}${z}`]}
                 isRotating={isRotating}
