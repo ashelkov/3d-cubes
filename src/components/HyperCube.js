@@ -110,6 +110,7 @@ class HyperCube extends Component {
   handleCubeClick = (x, y, z) => ({ target }) => {
     const { Z, Y, X, rotationCode } = this.state;
     const side = target.getAttribute('data-side');
+    if (!side) return false;
     const override = {
       top:    { Y: [Y[0] - 1, Y[1]] },
       bottom: { Y: [Y[0], Y[1] + 1] },

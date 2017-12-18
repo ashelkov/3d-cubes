@@ -15,28 +15,21 @@ const Cube = ({
   posZ,
   zIndex,
   getSideStyle,
-  rotationMode,
   rotation,
   onClick,
   withMotion,
 }) => (
   <div
-    className={cn('cube-container', { rotationMode, 'no-transition': withMotion })}
+    className={cn('cube-container', { 'no-transition': withMotion })}
     style={cubeStyle}
     onClick={onClick}
   >
-    <div className="back side" data-side="back"
-      style={{ transform: getSideStyle(0, 0, -1)}} />
-    <div className="left side" data-side="left"
-      style={{ transform: getSideStyle(-1, 0, 0) + ' rotateY(90deg)'}} />
-    <div className="right side" data-side="right"
-      style={{ transform: getSideStyle(1, 0, 0)  + ' rotateY(90deg)'}} />
-    <div className="top side" data-side="top"
-      style={{ transform: getSideStyle(0, -1, 0) + ' rotateX(90deg)'}} />
-    <div className="bottom side" data-side="bottom"
-      style={{ transform: getSideStyle(0, 1, 0) + ' rotateX(90deg)'}} />
-    <div className="front side" data-side="front"
-      style={{ transform: getSideStyle(0, 0, 1)}} />
+    <div className="back side" data-side="back" style={{ transform: getSideStyle(0, 0, -1)}} />
+    <div className="left side" data-side="left" style={{ transform: getSideStyle(-1, 0, 0) + ' rotateY(90deg)'}} />
+    <div className="right side" data-side="right" style={{ transform: getSideStyle(1, 0, 0)  + ' rotateY(90deg)'}} />
+    <div className="top side" data-side="top" style={{ transform: getSideStyle(0, -1, 0) + ' rotateX(90deg)'}} />
+    <div className="bottom side" data-side="bottom" style={{ transform: getSideStyle(0, 1, 0) + ' rotateX(90deg)'}} />
+    <div className="front side" data-side="front" style={{ transform: getSideStyle(0, 0, 1)}} />
   </div>
 );
 
