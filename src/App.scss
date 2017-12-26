@@ -17,5 +17,12 @@
     position: absolute;
     bottom: 20px;
     left: 20px;
+
+    .eraser-checkbox {
+      cursor: pointer;
+      margin-bottom: 10px;
+      font-size: 14px;
+      display: block;
+    }
   }
 }

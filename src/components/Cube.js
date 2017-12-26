@@ -16,13 +16,21 @@ const Cube = ({
   zIndex,
   getSideStyle,
   rotation,
-  onClick,
   withMotion,
+  onClick,
+  onMouseEnter,
+  onMouseLeave,
+  isHovered,
 }) => (
   <div
-    className={cn('cube-container', { 'no-transition': withMotion })}
+    className={cn('cube-container', {
+      'no-transition': withMotion,
+      'is-hovered': isHovered,
+    })}
     style={cubeStyle}
     onClick={onClick}
+    onMouseEnter={onMouseEnter}
+    onMouseLeave={onMouseLeave}
   >
     <div className="back side" data-side="back" style={{ transform: getSideStyle(0, 0, -1)}} />
     <div className="left side" data-side="left" style={{ transform: getSideStyle(-1, 0, 0) + ' rotateY(90deg)'}} />

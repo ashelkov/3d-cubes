@@ -56,9 +56,13 @@ class HyperCube extends Component {
   };
 
   reset = () => {
-    this.setState(
-      this.getInitialState()
-    );
+    const initialState = this.getInitialState();
+    this.setState(initialState);
+  };
+
+  setEraserMode = (isActive) => {
+    console.log('setEraserMode()', { isActive });
+    this.setState({ eraserMode: isActive });
   };
 
   handleMouseDown = (e) => {
@@ -144,6 +148,23 @@ class HyperCube extends Component {
     return (index + shiftSize) * (margin + 1);
   };
 
+  handleMouseEnter = (x, y, z) => () => {
+    this.setState({ hoveredCube: { x, y, z } });
+  };
+
+  handleMouseLeave = () => {
+    this.setState({ hoveredCube: null });
+  };
+
+  isCubeHovered = (x, y, z) => {
+    const { hoveredCube, eraserMode } = this.state;
+    return eraserMode &&
+      hoveredCube &&
+      (hoveredCube.x === x) &&
+      (hoveredCube.y === y) &&
+      (hoveredCube.z === z);
+  };
+
   getMotionDefaultStyle = ({ x, y, z }) => {
     const SHIFT_SIZE = 3;
     const override = {
@@ -164,7 +185,7 @@ class HyperCube extends Component {
   };
 
   render() {
-    const { cubeMatrix, cubeMatrixIndexes, rotation, rotationCode, size, isRotating, Z, Y, X } = this.state;
+    const { cubeMatrix, cubeMatrixIndexes, rotation, rotationCode, size, isRotating, Z, Y, X, hoveredCube } = this.state;
     const springPreset = { stiffness: 100, damping: 12 };
 
     return (
@@ -187,7 +208,10 @@ class HyperCube extends Component {
                 size={size}
                 zIndex={cubeMatrixIndexes[`${x}${y}${z}`]}
                 isRotating={isRotating}
+                isHovered={this.isCubeHovered(x, y, z)}
                 rotation={rotation}
+                onMouseEnter={this.handleMouseEnter(x, y, z)}
+                onMouseLeave={this.handleMouseLeave}
                 onClick={this.handleCubeClick(x, y, z)}
                 withMotion={this.isNewLayer({x, y, z})}
               />

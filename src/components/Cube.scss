@@ -3,6 +3,14 @@
   position: absolute;
   transition: transform .1s linear;
   will-change: transform;
+
+  &.is-hovered {
+    cursor: pointer;
+
+    .side {
+      background-color: rgba(255, 165, 0, .25);
+    }
+  }
 }
 
 .side {

@@ -10,12 +10,21 @@ class App extends Component {
     this.hypercube.reset();
   };
 
+  setEraserMode = (e) => {
+    this.hypercube.setEraserMode(e.target.checked);
+  };
+
   render() {
     return (
       <div className="app-container">
         <HyperCube ref={(ref) => this.hypercube = ref} />
+
         <div className="control-buttons">
-          <button className="button reset-button" onClick={this.resetHyperCube}>Reset</button>
+          <label className="eraser-checkbox">
+            <input type="checkbox" onChange={this.setEraserMode} />
+            <span>Remove Cubes</span>
+          </label>
+          <button onClick={this.resetHyperCube}>Reset</button>
         </div>
       </div>
     )
