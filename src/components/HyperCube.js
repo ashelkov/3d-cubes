@@ -61,7 +61,6 @@ class HyperCube extends Component {
   };
 
   setEraserMode = (isActive) => {
-    console.log('setEraserMode()', { isActive });
     this.setState({ eraserMode: isActive });
   };
 
@@ -165,7 +164,7 @@ class HyperCube extends Component {
       (hoveredCube.z === z);
   };
 
-  getMotionDefaultStyle = ({ x, y, z }) => {
+  _getMotionDefaultStyle = ({ x, y, z }) => {
     const SHIFT_SIZE = 3;
     const override = {
       top:    { y: y - SHIFT_SIZE },
@@ -178,46 +177,60 @@ class HyperCube extends Component {
     return { x, y, z, ...override };
   };
 
-  isNewLayer = (xyz) => {
-    const key = Object.keys(this.newLayer)[0];
-    const value = Object.values(this.newLayer)[0];
-    return xyz[key] === value;
+  getMotionDefaultStyle = (action) => {
+    return {};
+  };
+
+  getMotionStyle = (action) => {
+    const springPreset = { stiffness: 100, damping: 12 };
+    return {};
+    // return {
+    //   x: spring(x, springPreset),
+    //   y: spring(y, springPreset),
+    //   z: spring(z, springPreset),
+    // };
   };
 
   render() {
-    const { cubeMatrix, cubeMatrixIndexes, rotation, rotationCode, size, isRotating, Z, Y, X, hoveredCube } = this.state;
-    const springPreset = { stiffness: 100, damping: 12 };
+    const {
+      rotation,           // current rotation angles (x, y, z)
+      rotationCode,       // inner code for managing z-indexes
+      cubeMatrix,         // hypercube model (array of cubes)
+      cubeMatrixIndexes,  // matrix z-indexes
+      size,               // cube size
+      Z, Y, X,            // dimensions size vectors
+      action,             // current action that handled by react-motion
+    } = this.state;
 
     return (
       <div className="hypercube-container">
-        {cubeMatrix.map(({ x, y, z }, index) => (
-          <Motion
-            key={`${x}-${y}-${z}`}
-            defaultStyle={this.getMotionDefaultStyle({ x, y, z })}
-            style={{
-              x: spring(x, springPreset),
-              y: spring(y, springPreset),
-              z: spring(z, springPreset),
-            }}
-          >
-            {(motion) => (
-              <Cube
-                posX={this.getCubePosition(motion.x, X)}
-                posY={this.getCubePosition(motion.y, Y)}
-                posZ={this.getCubePosition(motion.z, Z)}
-                size={size}
-                zIndex={cubeMatrixIndexes[`${x}${y}${z}`]}
-                isRotating={isRotating}
-                isHovered={this.isCubeHovered(x, y, z)}
-                rotation={rotation}
-                onMouseEnter={this.handleMouseEnter(x, y, z)}
-                onMouseLeave={this.handleMouseLeave}
-                onClick={this.handleCubeClick(x, y, z)}
-                withMotion={this.isNewLayer({x, y, z})}
-              />
-            )}
-          </Motion>
-        ))}
+        <Motion
+          defaultStyle={this.getMotionDefaultStyle(action)}
+          style={this.getMotionStyle(action)}
+        >
+          {(motion) => (
+            <div>
+              {
+                cubeMatrix.map(({ x, y, z }, index) => (
+                  <Cube
+                    key={`${x}-${y}-${z}`}
+                    posX={this.getCubePosition(x, X)}
+                    posY={this.getCubePosition(y, Y)}
+                    posZ={this.getCubePosition(z, Z)}
+                    size={size}
+                    rotation={rotation}
+                    zIndex={cubeMatrixIndexes[`${x}${y}${z}`]}
+                    onClick={this.handleCubeClick(x, y, z)}
+                    isHovered={this.isCubeHovered(x, y, z)}
+                    onMouseEnter={this.handleMouseEnter(x, y, z)}
+                    onMouseLeave={this.handleMouseLeave}
+                  />
+                ))
+              }
+            </div>
+          )}
+        </Motion>
+
         <div className="rotation-inspector">
           <div>x: {rotation.x}, y: {rotation.y}, z: {rotation.z}</div>
           <div>code: {rotationCode}</div>
