@@ -17,18 +17,12 @@ const Cube = ({
   getSideStyle,
   rotation,
   onClick,
-  onMouseEnter,
-  onMouseLeave,
-  isHovered,
+  eraserMode,
 }) => (
   <div
     style={cubeStyle}
     onClick={onClick}
-    onMouseEnter={onMouseEnter}
-    onMouseLeave={onMouseLeave}
-    className={cn('cube-container', {
-      'is-hovered': isHovered,
-    })}
+    className={cn("cube-container", {'eraser-mode': eraserMode})}
   >
     <div className="back side" data-side="back" style={{ transform: getSideStyle(0, 0, -1)}} />
     <div className="left side" data-side="left" style={{ transform: getSideStyle(-1, 0, 0) + ' rotateY(90deg)'}} />

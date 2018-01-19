@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 import Cube from './Cube';
 // utils
 import { Motion, spring } from 'react-motion';
-import throttle from 'lodash.throttle';
 import memoize from 'lodash.memoize';
 import {
   getRotationCode,
@@ -17,101 +16,103 @@ class HyperCube extends Component {
 
   constructor() {
     super();
-    this.state = this.getInitialState();
-    this.onMouseMoveThrottled = throttle(this.handleMouseMove, 100);
     this.reindexMatrix = memoize(getMatrixIndexes, (m, c, x, y, z) => `${c}-${x}-${y}-${z}`);
-    this.newLayer = {};
+    this.isRotating = false;
+    this.rotationCode = 'DAA';
+    this.posXY = {};
+    this.state = this.getInitialState();
   }
 
   componentDidMount() {
     window.addEventListener('mouseup', this.handleMouseUp);
     window.addEventListener('mousedown', this.handleMouseDown);
-    window.addEventListener('mousemove', this.onMouseMoveThrottled);
+    window.addEventListener('mousemove', this.handleMouseMove);
   }
 
   componentWillUnmount() {
     window.removeEventListener('mouseup', this.handleMouseUp);
     window.removeEventListener('mousedown', this.handleMouseDown);
-    window.removeEventListener('mousemove', this.onMouseMoveThrottled);
+    window.removeEventListener('mousemove', this.handleMouseMove);
   }
 
   getInitialState = () => {
-    const initialMeasures = {
+    const cubeSizes = {
       Z: [-1, 0],
       Y: [-1, 0],
       X: [-1, 0],
       size: 45,
       margin: 0.25,
     };
-    const matrix = createCubeMatrix(initialMeasures);
+    const matrix = createCubeMatrix(cubeSizes);
     return {
-      ...initialMeasures,
-      posXY: null,
-      isRotating: false,
+      ...cubeSizes,
       rotation: { x: 0, y: 55, z: 0 },
-      rotationCode: 'DAA',
       cubeMatrix: matrix,
-      cubeMatrixIndexes: getMatrixIndexes(matrix, 'DAA'),
+      cubeMatrixIndexes: getMatrixIndexes(matrix, this.rotationCode),
     };
   };
 
   reset = () => {
-    const initialState = this.getInitialState();
-    this.setState(initialState);
+    this.rotationCode = 'DAA';
+    this.posXY = {};
+    this.setState(
+      this.getInitialState()
+    );
   };
 
-  setEraserMode = (isActive) => {
-    this.setState({ eraserMode: isActive });
+  setEraserMode = (eraserMode) => {
+    this.setState({ eraserMode });
   };
 
   handleMouseDown = (e) => {
-    this.setState({
-      isRotating: true,
-      posXY: { x: e.clientX, y :e.clientY }
-    });
+    this.isRotating = true;
+    this.posXY = { x: e.clientX, y :e.clientY };
   };
 
   handleMouseUp = () => {
-    this.setState({ isRotating: false });
+    this.isRotating = false;
   };
 
   // CUBE ROTATE
   handleMouseMove = (e) => {
-    const { isRotating, posXY, rotation, cubeMatrix } = this.state;
-    const SPEED = 2;
+    const { posXY, isRotating } = this;
     if (isRotating) {
-      const shiftX = e.clientX - posXY.x;
-      const shiftY = e.clientY - posXY.y;
-      const degX = Math.round(shiftY / window.innerHeight * 100 * SPEED);
-      const degY = Math.round(shiftX / window.innerWidth * 100 * SPEED);
+      this._posXY = { x: posXY.x, y: posXY.y };
+      this.posXY = { x: e.clientX, y: e.clientY };
+      requestAnimationFrame(this.animateCubeRotation);
+    }
+  };
+
+  animateCubeRotation = () => {
+    const { rotation, cubeMatrix } = this.state;
+    const { isRotating, rotationCode, posXY, _posXY } = this;
+    const shiftX = _posXY.x - posXY.x;
+    const shiftY = _posXY.y - posXY.y;
+    if (isRotating) {
       const nextRotation = {
-        x: rotation.x - degX,
-        y: rotation.y + degY,
+        x: rotation.x + Math.round(shiftY/3),
+        y: rotation.y - Math.round(shiftX/3),
         z: rotation.z,
       };
       const nextCode = getRotationCode(nextRotation);
-
-      this.setState(({ rotationCode, Z, Y, X }) => {
+      this.setState(({ Z, Y, X }) => {
         const extra = {};
         if (nextCode !== rotationCode) {
-          Object.assign(extra, {
-            cubeMatrixIndexes: this.reindexMatrix(cubeMatrix, nextCode, X, Y, Z)
-          });
+          Object.assign(extra, {cubeMatrixIndexes: this.reindexMatrix(cubeMatrix, nextCode, X, Y, Z)});
         }
-
         return {
-          posXY: { x: e.clientX, y: e.clientY },
           rotation: nextRotation,
-          rotationCode: nextCode,
           ...extra,
         }
       });
+      this.rotationCode = nextCode;
     }
   };
 
   // SIDE CLICK
   handleCubeClick = (x, y, z) => ({ target }) => {
-    const { Z, Y, X, rotationCode } = this.state;
+    const { Z, Y, X } = this.state;
+    const { rotationCode } = this;
     const side = target.getAttribute('data-side');
     if (!side) return false;
     const override = {
@@ -147,23 +148,6 @@ class HyperCube extends Component {
     return (index + shiftSize) * (margin + 1);
   };
 
-  handleMouseEnter = (x, y, z) => () => {
-    this.setState({ hoveredCube: { x, y, z } });
-  };
-
-  handleMouseLeave = () => {
-    this.setState({ hoveredCube: null });
-  };
-
-  isCubeHovered = (x, y, z) => {
-    const { hoveredCube, eraserMode } = this.state;
-    return eraserMode &&
-      hoveredCube &&
-      (hoveredCube.x === x) &&
-      (hoveredCube.y === y) &&
-      (hoveredCube.z === z);
-  };
-
   _getMotionDefaultStyle = ({ x, y, z }) => {
     const SHIFT_SIZE = 3;
     const override = {
@@ -194,14 +178,13 @@ class HyperCube extends Component {
   render() {
     const {
       rotation,           // current rotation angles (x, y, z)
-      rotationCode,       // inner code for managing z-indexes
       cubeMatrix,         // hypercube model (array of cubes)
       cubeMatrixIndexes,  // matrix z-indexes
       size,               // cube size
       Z, Y, X,            // dimensions size vectors
       action,             // current action that handled by react-motion
+      eraserMode,         // state of eraser mode
     } = this.state;
-
     return (
       <div className="hypercube-container">
         <Motion
@@ -221,9 +204,7 @@ class HyperCube extends Component {
                     rotation={rotation}
                     zIndex={cubeMatrixIndexes[`${x}${y}${z}`]}
                     onClick={this.handleCubeClick(x, y, z)}
-                    isHovered={this.isCubeHovered(x, y, z)}
-                    onMouseEnter={this.handleMouseEnter(x, y, z)}
-                    onMouseLeave={this.handleMouseLeave}
+                    eraserMode={eraserMode}
                   />
                 ))
               }
@@ -233,7 +214,6 @@ class HyperCube extends Component {
 
         <div className="rotation-inspector">
           <div>x: {rotation.x}, y: {rotation.y}, z: {rotation.z}</div>
-          <div>code: {rotationCode}</div>
         </div>
       </div>
     )
