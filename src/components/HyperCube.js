@@ -4,6 +4,7 @@ import Cube from './Cube';
 // utils
 import { Motion, spring } from 'react-motion';
 import memoize from 'lodash.memoize';
+import reject from 'lodash.reject';
 import {
   getRotationCode,
   createCubeMatrix,
@@ -61,7 +62,10 @@ class HyperCube extends Component {
   };
 
   setEraserMode = (eraserMode) => {
-    this.setState({ eraserMode });
+    this.setState({
+      eraserMode,
+      margin: eraserMode ? 0.35 : 0.25,
+    });
   };
 
   handleMouseDown = (e) => {
@@ -111,10 +115,19 @@ class HyperCube extends Component {
 
   // SIDE CLICK
   handleCubeClick = (x, y, z) => ({ target }) => {
-    const { Z, Y, X } = this.state;
-    const { rotationCode } = this;
+    const { eraserMode } = this.state;
     const side = target.getAttribute('data-side');
     if (!side) return false;
+    if (eraserMode) {
+      this.removeSingleCube({x, y, z});
+    } else {
+      this.addNewLayer(side);
+    }
+  };
+
+  addNewLayer = (side) => {
+    const { Z, Y, X } = this.state;
+    const { rotationCode } = this;
     const override = {
       top:    { Y: [Y[0] - 1, Y[1]] },
       bottom: { Y: [Y[0], Y[1] + 1] },
@@ -130,15 +143,22 @@ class HyperCube extends Component {
       ...override,
     });
 
-    this.clickedSide = side;
-    this.newLayer = {
-      top:    { y: y - 1 },
-      bottom: { y: y + 1 },
-      right:  { x: x + 1 },
-      left:   { x: x - 1 },
-      front:  { z: z + 1 },
-      back:   { z: z - 1 },
-    }[side];
+    // this.clickedSide = side;
+    // this.newLayer = {
+    //   top:    { y: y - 1 },
+    //   bottom: { y: y + 1 },
+    //   right:  { x: x + 1 },
+    //   left:   { x: x - 1 },
+    //   front:  { z: z + 1 },
+    //   back:   { z: z - 1 },
+    // }[side];
+  };
+
+  removeSingleCube = (xyz) => {
+    const { cubeMatrix } = this.state;
+    this.setState({
+      cubeMatrix: reject(cubeMatrix, xyz)
+    });
   };
 
   getCubePosition = (index, vector) => {
