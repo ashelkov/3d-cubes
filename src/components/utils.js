@@ -41,8 +41,19 @@ export function getSortingPattern(code) {
 
 // cube matrix creation based on dimension vectors
 export function createCubeMatrix({ Z, Y, X }) {
-  // console.log('createCubeMatrix()', { W, H, D });
+  const matrix = [];
+  for (let y = Y[0]; y <= Y[1]; y++) {
+    for (let x = X[0]; x <= X[1]; x++) {
+      for (let z = Z[0]; z <= Z[1]; z++) {
+        matrix.push({ x, y, z });
+      }
+    }
+  }
+  return matrix;
+}
 
+// cube matrix creation based on dimension vectors
+export function createCubeLayer({ Z, Y, X }, ) {
   const matrix = [];
   for (let y = Y[0]; y <= Y[1]; y++) {
     for (let x = X[0]; x <= X[1]; x++) {

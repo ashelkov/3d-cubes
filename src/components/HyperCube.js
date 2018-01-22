@@ -41,7 +41,7 @@ class HyperCube extends Component {
       Z: [-1, 0],
       Y: [-1, 0],
       X: [-1, 0],
-      size: 45,
+      size: 50,
       margin: 0.25,
     };
     const matrix = createCubeMatrix(cubeSizes);
@@ -64,7 +64,6 @@ class HyperCube extends Component {
   setEraserMode = (eraserMode) => {
     this.setState({
       eraserMode,
-      margin: eraserMode ? 0.35 : 0.25,
     });
   };
 
