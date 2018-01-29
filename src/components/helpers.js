@@ -1,6 +1,6 @@
 // returns letter code of current rotation angles
 export function getRotationCode({ x, y, z }) {
-  const X_PERSPECTIVE = 25;
+  const X_PERSPECTIVE = 28;
   let code = '';
   [x - X_PERSPECTIVE, y, z].forEach((angle) => {
     const a = angle < 0
@@ -41,19 +41,6 @@ export function getSortingPattern(code) {
 
 // cube matrix creation based on dimension vectors
 export function createCubeMatrix({ Z, Y, X }) {
-  const matrix = [];
-  for (let y = Y[0]; y <= Y[1]; y++) {
-    for (let x = X[0]; x <= X[1]; x++) {
-      for (let z = Z[0]; z <= Z[1]; z++) {
-        matrix.push({ x, y, z });
-      }
-    }
-  }
-  return matrix;
-}
-
-// cube matrix creation based on dimension vectors
-export function createCubeLayer({ Z, Y, X }, ) {
   const matrix = [];
   for (let y = Y[0]; y <= Y[1]; y++) {
     for (let x = X[0]; x <= X[1]; x++) {

@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
 // components
 import Cube from './Cube';
-// utils
-import { Motion, spring } from 'react-motion';
-import memoize from 'lodash.memoize';
-import reject from 'lodash.reject';
+// helpers
 import {
   getRotationCode,
   createCubeMatrix,
   getMatrixIndexes,
-} from './utils';
+} from './helpers';
+// utils
+import { Motion, spring } from 'react-motion';
+import memoize from 'lodash.memoize';
+import filter from 'lodash.filter';
+import reject from 'lodash.reject';
+import omit from 'lodash.omit';
 // styles
 import './HyperCube.scss';
 
@@ -38,9 +41,9 @@ class HyperCube extends Component {
 
   getInitialState = () => {
     const cubeSizes = {
-      Z: [-1, 0],
-      Y: [-1, 0],
       X: [-1, 0],
+      Y: [-1, 0],
+      Z: [-1, 0],
       size: 50,
       margin: 0.25,
     };
@@ -125,32 +128,25 @@ class HyperCube extends Component {
   };
 
   addNewLayer = (side) => {
-    const { Z, Y, X } = this.state;
+    const { Z, Y, X, cubeMatrix } = this.state;
     const { rotationCode } = this;
-    const override = {
-      top:    { Y: [Y[0] - 1, Y[1]] },
-      bottom: { Y: [Y[0], Y[1] + 1] },
-      right:  { X: [X[0], X[1] + 1] },
-      left:   { X: [X[0] - 1, X[1]] },
-      front:  { Z: [Z[0], Z[1] + 1] },
-      back:   { Z: [Z[0] - 1, Z[1]] },
+    const actionData = {
+      top:    { Y: [Y[0] - 1, Y[1]], layer: { y: Y[0] - 1} },
+      bottom: { Y: [Y[0], Y[1] + 1], layer: { y: Y[1] + 1} },
+      right:  { X: [X[0], X[1] + 1], layer: { x: X[1] + 1} },
+      left:   { X: [X[0] - 1, X[1]], layer: { x: X[0] - 1} },
+      front:  { Z: [Z[0], Z[1] + 1], layer: { z: Z[1] + 1} },
+      back:   { Z: [Z[0] - 1, Z[1]], layer: { z: Z[0] - 1} },
     }[side];
-    const matrix = createCubeMatrix({ Z, Y, X, ...override });
+    const { layer, ...override } = actionData;
+    const newFullMatrix = createCubeMatrix({ Z, Y, X, ...override });
+    const newLayer = filter(newFullMatrix, layer);
+    const matrix = [...cubeMatrix, ...newLayer];
     this.setState({
       cubeMatrix: matrix,
       cubeMatrixIndexes: getMatrixIndexes(matrix, rotationCode),
-      ...override,
+      ...omit(override, 'filter'),
     });
-
-    // this.clickedSide = side;
-    // this.newLayer = {
-    //   top:    { y: y - 1 },
-    //   bottom: { y: y + 1 },
-    //   right:  { x: x + 1 },
-    //   left:   { x: x - 1 },
-    //   front:  { z: z + 1 },
-    //   back:   { z: z - 1 },
-    // }[side];
   };
 
   removeSingleCube = (xyz) => {
