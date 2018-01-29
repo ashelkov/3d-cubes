@@ -14,10 +14,11 @@ const Cube = ({
   posY,
   posZ,
   zIndex,
-  getSideStyle,
+  getTransforms,
   rotation,
   onClick,
   eraserMode,
+  sideStyle,
 }) => (
   <div
     style={cubeStyle}
@@ -25,22 +26,22 @@ const Cube = ({
     className={cn("cube-container", {'eraser-mode': eraserMode})}
   >
     <div className="back side" data-side="back"
-         style={{transform: getSideStyle(0, 0, -1)}} />
+         style={{ ...sideStyle, transform: getTransforms(0, 0, -1) }} />
     <div className="left side" data-side="left"
-         style={{ transform: getSideStyle(-1, 0, 0) + ' rotateY(90deg)'}} />
+         style={{ ...sideStyle, transform: getTransforms(-1, 0, 0)  + ' rotateY(90deg)' }} />
     <div className="right side" data-side="right"
-         style={{ transform: getSideStyle(1, 0, 0)  + ' rotateY(90deg)'}} />
+         style={{ ...sideStyle, transform: getTransforms(1, 0, 0)   + ' rotateY(90deg)' }} />
     <div className="top side" data-side="top"
-         style={{ transform: getSideStyle(0, -1, 0) + ' rotateX(90deg)'}} />
+         style={{ ...sideStyle, transform: getTransforms(0, -1, 0)  + ' rotateX(90deg)' }} />
     <div className="bottom side" data-side="bottom"
-         style={{ transform: getSideStyle(0, 1, 0) + ' rotateX(90deg)'}} />
+         style={{ ...sideStyle, transform: getTransforms(0, 1, 0)   + ' rotateX(90deg)' }} />
     <div className="front side" data-side="front"
-         style={{ transform: getSideStyle(0, 0, 1)}} />
+         style={{ ...sideStyle, transform: getTransforms(0, 0, 1) }} />
   </div>
 );
 
 export default compose(
-  withProps(({ size, posX, posY, posZ, zIndex, rotation }) => {
+  withProps(({ size, posX, posY, posZ, zIndex, rotation, color }) => {
     return {
       cubeStyle: {
         transform: `rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) rotateZ(${rotation.z}deg)`,
@@ -48,13 +49,15 @@ export default compose(
         height: `${size}px`,
         zIndex: zIndex,
       },
-      getSideStyle: (modX, modY, modZ) => {
-        const positions = [
+      sideStyle: {
+        background: `hsla(${color}, 60%, 65%, 0.75)`,
+      },
+      getTransforms: (modX, modY, modZ) => {
+        return [
           `translateX(${size*posX + modX*size/2}px)`,
           `translateY(${size*posY + modY*size/2}px)`,
           `translateZ(${size*posZ + modZ*size/2}px)`,
-        ];
-        return positions.join(' ');
+        ].join(' ');
       },
     }
   }),

@@ -45,7 +45,8 @@ export function createCubeMatrix({ Z, Y, X }) {
   for (let y = Y[0]; y <= Y[1]; y++) {
     for (let x = X[0]; x <= X[1]; x++) {
       for (let z = Z[0]; z <= Z[1]; z++) {
-        matrix.push({ x, y, z });
+        const color = Math.floor(Math.random()*360);
+        matrix.push({ x, y, z, color });
       }
     }
   }

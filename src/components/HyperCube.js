@@ -209,7 +209,7 @@ class HyperCube extends Component {
           {(motion) => (
             <div>
               {
-                cubeMatrix.map(({ x, y, z }, index) => (
+                cubeMatrix.map(({ x, y, z, color }, index) => (
                   <Cube
                     key={`${x}-${y}-${z}`}
                     posX={this.getCubePosition(x, X)}
@@ -219,6 +219,7 @@ class HyperCube extends Component {
                     rotation={rotation}
                     zIndex={cubeMatrixIndexes[`${x}${y}${z}`]}
                     onClick={this.handleCubeClick(x, y, z)}
+                    color={color}
                     eraserMode={eraserMode}
                   />
                 ))
