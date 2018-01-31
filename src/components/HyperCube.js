@@ -8,7 +8,7 @@ import {
   getMatrixIndexes,
 } from './helpers';
 // utils
-import { Motion, spring } from 'react-motion';
+import { Motion, StaggeredMotion, spring } from 'react-motion';
 import memoize from 'lodash.memoize';
 import filter from 'lodash.filter';
 import reject from 'lodash.reject';
@@ -163,6 +163,22 @@ class HyperCube extends Component {
     return (index + shiftSize) * (margin + 1);
   };
 
+  getMotionDefaultStyles = (action) => {
+    const { cubeMatrix } = this.state;
+    return cubeMatrix.map((cube) => ({ value: 0 }));
+  };
+
+  getMotionStyles = (action) => (
+    (prevInterpolatedStyles) => {
+      const springPreset = {stiffness: 100, damping: 12};
+      return prevInterpolatedStyles.map((_, i) => {
+        return i === 0
+          ? { value: spring(50, springPreset) }
+          : { value: spring(prevInterpolatedStyles[i - 1].value, springPreset)}
+      })
+    }
+  );
+
   _getMotionDefaultStyle = ({ x, y, z }) => {
     const SHIFT_SIZE = 3;
     const override = {
@@ -174,20 +190,6 @@ class HyperCube extends Component {
       back:   { z: z - SHIFT_SIZE },
     }[this.clickedSide];
     return { x, y, z, ...override };
-  };
-
-  getMotionDefaultStyle = (action) => {
-    return {};
-  };
-
-  getMotionStyle = (action) => {
-    const springPreset = { stiffness: 100, damping: 12 };
-    return {};
-    // return {
-    //   x: spring(x, springPreset),
-    //   y: spring(y, springPreset),
-    //   z: spring(z, springPreset),
-    // };
   };
 
   render() {
@@ -203,32 +205,34 @@ class HyperCube extends Component {
     } = this.state;
     return (
       <div className="hypercube-container">
-        <Motion
-          defaultStyle={this.getMotionDefaultStyle(action)}
-          style={this.getMotionStyle(action)}
+        <StaggeredMotion
+          defaultStyles={this.getMotionDefaultStyles(action)}
+          styles={this.getMotionStyles(action)}
         >
-          {(motion) => (
+          {(interpolatingStyles) => (
             <div>
               {
-                cubeMatrix.map(({ x, y, z, color }, index) => (
-                  <Cube
-                    key={`${x}-${y}-${z}`}
-                    posX={this.getCubePosition(x, X)}
-                    posY={this.getCubePosition(y, Y)}
-                    posZ={this.getCubePosition(z, Z)}
-                    size={size}
-                    rotation={rotation}
-                    isRotating={isRotating}
-                    zIndex={cubeMatrixIndexes[`${x}${y}${z}`]}
-                    onClick={this.handleCubeClick(x, y, z)}
-                    color={color}
-                    eraserMode={eraserMode}
-                  />
-                ))
+                cubeMatrix.map(({ x, y, z, color }, index) => {
+                  return (
+                    <Cube
+                      key={`${x}-${y}-${z}`}
+                      posX={this.getCubePosition(x, X)}
+                      posY={this.getCubePosition(y, Y)}
+                      posZ={this.getCubePosition(z, Z)}
+                      size={size}
+                      rotation={rotation}
+                      isRotating={isRotating}
+                      zIndex={cubeMatrixIndexes[`${x}${y}${z}`]}
+                      onClick={this.handleCubeClick(x, y, z)}
+                      color={color}
+                      eraserMode={eraserMode}
+                    />
+                  )
+                })
               }
             </div>
           )}
-        </Motion>
+        </StaggeredMotion>
 
         <div className="rotation-inspector">
           <div>x: {rotation.x}, y: {rotation.y}, z: {rotation.z}</div>
@@ -239,3 +243,19 @@ class HyperCube extends Component {
 }
 
 export default HyperCube;
+
+// <StaggeredMotion
+//   defaultStyles={[{h: 0}, {h: 0}, {h: 0}]}
+//   styles={prevInterpolatedStyles => prevInterpolatedStyles.map((_, i) => {
+//     return i === 0
+//       ? {h: spring(100)}
+//       : {h: spring(prevInterpolatedStyles[i - 1].h)}
+//   })}>
+//   {interpolatingStyles =>
+//     <div>
+//       {interpolatingStyles.map((style, i) =>
+//         <div key={i} style={{border: '1px solid', height: style.h}} />)
+//       }
+//     </div>
+//   }
+// </StaggeredMotion>
