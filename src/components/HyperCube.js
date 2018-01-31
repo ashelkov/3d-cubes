@@ -71,27 +71,27 @@ class HyperCube extends Component {
   };
 
   handleMouseDown = (e) => {
-    this.isRotating = true;
+    this.setState({ isRotating: true });
     this.posXY = { x: e.clientX, y :e.clientY };
   };
 
   handleMouseUp = () => {
-    this.isRotating = false;
+    this.setState({ isRotating: false });
   };
 
   // CUBE ROTATE
   handleMouseMove = (e) => {
-    const { posXY, isRotating } = this;
+    const { isRotating } = this.state;
     if (isRotating) {
-      this._posXY = { x: posXY.x, y: posXY.y };
+      this._posXY = { x: this.posXY.x, y: this.posXY.y };
       this.posXY = { x: e.clientX, y: e.clientY };
       requestAnimationFrame(this.animateCubeRotation);
     }
   };
 
   animateCubeRotation = () => {
-    const { rotation, cubeMatrix } = this.state;
-    const { isRotating, rotationCode, posXY, _posXY } = this;
+    const { rotation, cubeMatrix, isRotating } = this.state;
+    const { rotationCode, posXY, _posXY } = this;
     const shiftX = _posXY.x - posXY.x;
     const shiftY = _posXY.y - posXY.y;
     if (isRotating) {
@@ -193,6 +193,7 @@ class HyperCube extends Component {
   render() {
     const {
       rotation,           // current rotation angles (x, y, z)
+      isRotating,         // current rotation state
       cubeMatrix,         // hypercube model (array of cubes)
       cubeMatrixIndexes,  // matrix z-indexes
       size,               // cube size
@@ -217,6 +218,7 @@ class HyperCube extends Component {
                     posZ={this.getCubePosition(z, Z)}
                     size={size}
                     rotation={rotation}
+                    isRotating={isRotating}
                     zIndex={cubeMatrixIndexes[`${x}${y}${z}`]}
                     onClick={this.handleCubeClick(x, y, z)}
                     color={color}

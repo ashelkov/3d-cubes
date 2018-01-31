@@ -2,8 +2,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  perspective: 1200px;
-  perspective-origin: center -300px;
+  perspective: 150vh;
+  perspective-origin: center 0;
   background:
           linear-gradient(#cacaca, transparent),
           linear-gradient(180deg, #dedede, transparent);

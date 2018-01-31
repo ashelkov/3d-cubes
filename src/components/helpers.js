@@ -1,6 +1,6 @@
 // returns letter code of current rotation angles
 export function getRotationCode({ x, y, z }) {
-  const X_PERSPECTIVE = 28;
+  const X_PERSPECTIVE = 20;
   let code = '';
   [x - X_PERSPECTIVE, y, z].forEach((angle) => {
     const a = angle < 0

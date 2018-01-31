@@ -16,6 +16,7 @@ const Cube = ({
   zIndex,
   getTransforms,
   rotation,
+  isRotating,
   onClick,
   eraserMode,
   sideStyle,
@@ -23,7 +24,10 @@ const Cube = ({
   <div
     style={cubeStyle}
     onClick={onClick}
-    className={cn("cube-container", {'eraser-mode': eraserMode})}
+    className={cn('cube-container', {
+      'eraser-mode': eraserMode,
+      'is-rotating': isRotating,
+    })}
   >
     <div className="back side" data-side="back"
          style={{ ...sideStyle, transform: getTransforms(0, 0, -1) }} />
