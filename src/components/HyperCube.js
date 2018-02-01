@@ -96,10 +96,11 @@ class HyperCube extends Component {
     const shiftY = _posXY.y - posXY.y;
     if (isRotating) {
       const nextRotation = {
-        x: rotation.x + Math.round(shiftY/3),
-        y: rotation.y - Math.round(shiftX/3),
+        x: rotation.x + shiftY/3,
+        y: rotation.y - shiftX/3,
         z: rotation.z,
       };
+      console.log
       const nextCode = getRotationCode(nextRotation);
       this.setState(({ Z, Y, X }) => {
         const extra = {};
@@ -235,7 +236,7 @@ class HyperCube extends Component {
         </StaggeredMotion>
 
         <div className="rotation-inspector">
-          <div>x: {rotation.x}, y: {rotation.y}, z: {rotation.z}</div>
+          <div>x: {Math.round(rotation.x)}, y: {Math.round(rotation.y)}</div>
         </div>
       </div>
     )
